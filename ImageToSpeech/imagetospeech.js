@@ -1,20 +1,28 @@
 var msg = new SpeechSynthesisUtterance('Hello World');
 
-var imgs = document.getElementsByTagName("img");
-var imgSrcs = [];
+//var imgs = document.getElementsByTagName("img");
+var anchors = document.getElementsByTagName("a");
+var images = [];
+var imagesDescription = {};
 
-console.log(imgs);
-for (var i = 0; i < imgs.length; i++) {
-  var b = 0;
-  console.log("123");
-  imgSrcs.push(imgs[i].src);
-  console.log(imgs[i].src);
-  window.speechSynthesis.speak(msg);
-}
+for (var i = 0; i < anchors.length; ++i){
+  console.log(i);
+  anchors[i].addEventListener("focus", myFunction);
+  }
+
+
 
 //chrome.contextMenus.create({
-  //title: "Search: %s", 
-  //contexts:["page", "selection"], 
-  //onclick: clickHandler,
+//title: "Search: %s", 
+//contexts:["page", "selection"], 
+//onclick: clickHandler,
 //});
+function myFunction(e){
+
+  var imgSrcVal = $(anchors[i]).find("img").attr("src");
+  if(imgSrcVal != undefined) {
+    // POST AO SERVER
+    window.speechSynthesis.speak(msg);
+  }
+}
 
