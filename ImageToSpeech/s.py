@@ -22,7 +22,6 @@ def getDescription():
 		caption = c.url_caption(str(data))
 	    
 		response = {"success":caption}
-		print "fff"
 		linhas = getText(str(data))
 		texto = ""
 		if not linhas:
@@ -31,6 +30,8 @@ def getDescription():
 			texto = parseText(linhas)
 		if texto:
 			print texto
+			response = {"success":texto}
+			return json.dumps(response)
 		return json.dumps(response)
 	else:
 		print "Hello World"
@@ -61,7 +62,7 @@ def getText(img_link):
 # Lista com dicts
 def parseText(lines):
 	linhas = lines[0]["lines"]
-	texto_final = ""
+	texto_final = "This image contains the following text: "
 	for l in linhas:
 		for w in l["words"]:
 			texto_final = texto_final + " " + w["text"]
