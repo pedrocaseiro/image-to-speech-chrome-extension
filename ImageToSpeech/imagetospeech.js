@@ -1,9 +1,14 @@
 
 var anchors = document.getElementsByTagName("a");
+var images = document.getElementsByTagName("img");
 
 for (var i = 0; i < anchors.length; i++){
-  console.log(i);
   anchors[i].addEventListener("focus", myFunction);
+  }
+
+
+ for (var j = 0; j < images.length; j++){
+  images[j].addEventListener("focus", myFunctionImg);
   }
 
 
@@ -14,12 +19,26 @@ for (var i = 0; i < anchors.length; i++){
 //onclick: clickHandler,
 //});
 function myFunction(e){
-	console.log("entrou");
+	console.log("a");
 	var imgSrcVal = $(e.target).find("img").attr("src");
-
+	
 	if(imgSrcVal != undefined) {
 		
 		console.log("ddd");
+		// POST AO SERVER
+		httpPOST(imgSrcVal);
+		//window.speechSynthesis.speak(msg);
+
+	}
+}
+
+function myFunctionImg(e){
+	console.log("img");
+	var imgSrcVal = $(e.target).attr("src");
+
+
+	if(imgSrcVal != undefined) {
+		console.log(imgSrcVal);
 		// POST AO SERVER
 		httpPOST(imgSrcVal);
 		//window.speechSynthesis.speak(msg);
