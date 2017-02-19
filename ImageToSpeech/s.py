@@ -9,7 +9,22 @@ from flask_cors import CORS, cross_origin
 
 from captionbot import CaptionBot
 
-KEY = '1:9b183b1c6508456aaa4bc24e0bcd4047'
+headers = {
+    # Request headers
+    'Content-Type': 'application/json',
+    'Ocp-Apim-Subscription-Key': '9b183b1c6508456aaa4bc24e0bcd4047',
+}
+
+params = urllib.urlencode({
+    # Request parameters
+    'returnFaceId': 'true',
+    'returnFaceLandmarks': 'false',
+    'returnFaceAttributes': 'age,gender,facialHair,glasses',
+})
+
+
+
+KEY = '9b183b1c6508456aaa4bc24e0bcd4047'
 CF.Key.set(KEY)
 
 app = Flask(__name__)
@@ -25,8 +40,8 @@ def getDescription():
 		data = img
 		c = CaptionBot()
 		caption = c.url_caption(str(data))
-	    
-		response = {"success":caption}
+
+		r = {"success":caption}
 		print "fff"
 		linhas = getText(str(data))
 		texto = ""
@@ -37,11 +52,41 @@ def getDescription():
 		if texto:
 		        aux = "this image has the following text: " + texto
 		        response = {"success" : aux}
-                        return json.dumps(response)
+		        return json.dumps(response)
+		#result = CF.face.detect(data)
+		#print result
+		try:
+		    conn = httplib.HTTPSConnection('westus.api.cognitive.microsoft.com')
+		    body = {"url":data}
+		    conn.request("POST", "/face/v1.0/detect?%s" % params, json.dumps(body), headers)
+		    print("teste1")
+		    response = conn.getresponse()
+		    data = response.read()
+		    #print(data)
+		    data = json.loads(data)
+		    if(data):
+		    	#print(data[0]['faceId'])
+		    	age = data[0]["faceAttributes"]["age"]
+		    	gender = data[0]["faceAttributes"]["gender"]
+		    	moustache = data[0]["faceAttributes"]["facialHair"]["moustache"]
+		    	beard = data[0]["faceAttributes"]["facialHair"]["beard"]
+		    	glasses = data[0]["faceAttributes"]["glasses"]
+		    	print age 
+		    	print gender
+		    	print moustache
+		    	print beard
+		    	print glasses
+		    	description = " It's gender is " + gender + " with an age of " + str(age) + " years. It has a "+str(100*float(moustache)) +" percent of having a moustache and "+str(100*float(beard))+" percent of having a beard. He has "+glasses
+		    	r["success"] += description 
 
-                result = CF.face.detect(data)
-                print result
-		return json.dumps(response)
+		    else:
+		    	print "Face not found"
+
+		    conn.close()
+		except Exception as e:
+		    print(e)
+
+		return json.dumps(r)
 	else:
 		print "Hello World"
 
