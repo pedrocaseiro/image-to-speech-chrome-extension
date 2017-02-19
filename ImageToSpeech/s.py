@@ -2,10 +2,15 @@ import json
 import ssl
 import requests
 import httplib, urllib, base64
+import cognitive_face as CF
+
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
 from captionbot import CaptionBot
+
+KEY = '1:9b183b1c6508456aaa4bc24e0bcd4047'
+CF.Key.set(KEY)
 
 app = Flask(__name__)
 CORS(app)
@@ -30,7 +35,12 @@ def getDescription():
 		else:
 			texto = parseText(linhas)
 		if texto:
-			print texto
+		        aux = "this image has the following text: " + texto
+		        response = {"success" : aux}
+                        return json.dumps(response)
+
+                result = CF.face.detect(data)
+                print result
 		return json.dumps(response)
 	else:
 		print "Hello World"
