@@ -1,8 +1,9 @@
-var anchors = document.getElementsByTagName("a");
-
-for (var i = 0; i < anchors.length; i++){
-  anchors[i].addEventListener("focus", myFunction);
-}
+document.addEventListener('scroll', function(){
+  var anchors = document.getElementsByTagName("a");
+  for (var i = 0; i < anchors.length; i++){
+    anchors[i].addEventListener("focus", myFunction);
+  }
+}, false);
 
 function myFunction(e){
   console.log("a");
